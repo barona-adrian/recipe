@@ -1,6 +1,7 @@
-var pages = ["ingredientInfo", "recipeInfo"];
+var pages = ["ingredientInfo", "recipeInfo", "instructionsInfo"];
 var current = 0;
 var inquiryResponse = {};
+var instructionsResponse = {};
 
 var number = 5;
 
@@ -84,7 +85,7 @@ function resetToFirst() {
 $(document).ready(resetToFirst());
 
 
-function nextPage(pageNumber){
+function nextPage(pageNumber, id){
 
     if(pageNumber == 1){
 
@@ -116,60 +117,31 @@ function nextPage(pageNumber){
             // resetToFirst();
         }
 
-        ajaxCall(jsonObject, "/food_api/app/ingredient_inquiry", callback);
+        ajaxCall(jsonObject, "/food_api/app/find_by_ingredient", callback);
     }
+    if(pageNumber == 2){
 
+            $("#executeBatch2").addClass("hidden");
+
+            var jsonObject = {};
+            jsonObject["recipeID"] = id;
+
+            console.log(jsonObject);
+
+            var callback = function(data){
+                console.log(data);
+                instructionsResponse = data;
+                current = 1;
+                loadInstructions();
+            }
+            ajaxCall(jsonObject, "/food_api/app/analyzed_instructions", callback);
+    }
     if(current + 1 < pages.length){
         current++;
         resetPages();
         $("#" + pages[current]).removeClass("hidden");
     }
-
-
-
 }
-
-
-function scrollAnimation(id) {
-    $("html, body").animate({
-        scrollTop: $("#" + id).offset().top - 80
-    }, 700);
-}
-
-function canGoNext(pageNumber){
-
-
-
-    var goNextPage = true;
-
-    $("#" + pages[current] + " input[required]").map(function() {
-        var isEmpty = $(this).val().trim === "";
-        return goNextPage = goNextPage && !isEmpty;
-    })
-
-
-
-    if(goNextPage){
-        console.log("herexs1");
-        nextPage(pageNumber);
-        resetErrorMessage();
-    }
-    else {
-        console.log("Sorry fill everything out.");
-        $("#errorMessage span").text("*Please fill out all the required fields*");
-    }
-
-    scrollAnimation("tool");
-
-
-}
-
-
-function resetErrorMessage(){
-    $("#errorMessage span").text("");
-}
-
-
 
 function ajaxCall(json, url, callback){
     console.log("Doing ajax call to " + url);
@@ -192,7 +164,47 @@ function ajaxCall(json, url, callback){
             console.log("The call is done");
         }
     });
+}
 
+
+function scrollAnimation(id) {
+    $("html, body").animate({
+        scrollTop: $("#" + id).offset().top - 80
+    }, 700);
+}
+
+function canGoNext(pageNumber, id){
+
+
+
+    var goNextPage = true;
+
+    $("#" + pages[current] + " input[required]").map(function() {
+        var isEmpty = $(this).val().trim === "";
+        goNextPage= goNextPage && !isEmpty;
+        return goNextPage = goNextPage && !isEmpty;
+    })
+
+
+
+    if(goNextPage){
+        console.log("herexs1");
+        nextPage(pageNumber, id);
+        resetErrorMessage();
+    }
+    else {
+        console.log("Sorry fill everything out.");
+        $("#errorMessage span").text("*Please fill out all the required fields*");
+    }
+
+    scrollAnimation("tool");
+
+
+}
+
+
+function resetErrorMessage(){
+    $("#errorMessage span").text("");
 }
 
 function loadOngo() {
@@ -259,7 +271,7 @@ function loadOngo() {
 
             var br = "<br>";
 
-            var p3 = "<p>Click here for instructions and full ingredients</p>";
+            var p3 = "<p> <a class=\"btn btn-success pull-right\" onclick=\"getInstructions('" + id +  "')\">Get Recipe</a></p>";
 
             var closeSecondDiv = "</div>";
 
@@ -286,15 +298,88 @@ function loadOngo() {
             console.log("\n");
         }
     }
+}
+
+function loadInstructions(){
+    $("#executeBatch3").removeAttr("hidden");
 
 
+    for (var key in instructionsResponse)
+    {
+        if (instructionsResponse.hasOwnProperty(key))
+        {
+            // here you have access to
+            var name = instructionsResponse[key].name;
+            var steps = instructionsResponse[key].steps;
+
+
+//            console.log("name : " + name);
+//            console.log("steps : " + steps);
+//
+//            console.log(steps[key].number);
+//            console.log(steps[key].ingredients[key].name);
+
+            for(var key2 in steps){
+                var stepNumber = steps[key2].number;
+                var step = steps[key2].step.replace(".)",").");
+                console.log("Step Number: " + stepNumber);
+                console.log(step);
+
+                var firstDiv = "<div class = \"form-group floating-label-form-group controls box-content right left bottom\">";
+
+                var secondDiv = "<div class=\"col-sm-6\">";
+                var h4_1 = "<h4 class=\"top\">Step " + stepNumber + "</h4>";
+                var closeSecondDiv = "</div>";
+
+                var thirdDiv = "<div class=\"col-sm-6\">";
+
+                var stp = step.split(".");
+                var h4_2 = "";
+                var p1 = "";
+                for(var i = 0; i < stp.length; i++){
+                    if(stp[i] != ""){
+                        console.log(stp[i]);
+
+                        var p0 = "<p>" +  stp[i] + "</p>";
+                        p1 += p0;
+
+                    }
+                }
+
+                var closeThirdDiv = "</div>";
+                var closeFirstDiv = "</div>";
+
+
+                var newHtml = firstDiv + "\n" +
+                    secondDiv + "\n" +
+                    h4_1 + "\n" +
+                    closeSecondDiv + "\n" +
+                    thirdDiv + "\n" +
+                    p1 + "\n" +
+                    closeThirdDiv + "\n" +
+                    closeFirstDiv + "\n";
+
+                console.log(newHtml)
+
+                $("#instructionResults").append(newHtml);
+            }
+
+            console.log("\n");
+        }
+    }
 }
 
 
 
 
 
+function getInstructions(id){
+    console.log("tiburon!");
+    console.log(id);
 
+    canGoNext(2, id);
+    $("#instructionsInfo").removeClass("hidden");
+}
 
 
 

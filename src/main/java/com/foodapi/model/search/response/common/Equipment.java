@@ -1,4 +1,4 @@
-package com.foodapi.model;
+package com.foodapi.model.search.response.common;
 
 @lombok.Getter
 @lombok.Setter

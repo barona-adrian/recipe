@@ -126,7 +126,7 @@
         <div id="ingredientInfo" class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <h3>So, what's in your fridge?</h3>
+                    <h3>So, whats in your fridge?</h3>
                 </div>
             </div>
             <div class="row control-group">
@@ -145,7 +145,7 @@
 
             <div class="row col-xs-6 col-xs-offset-6 tool-nav-buttons">
                 <a class="btn btn-success pull-right"
-                   onclick="canGoNext(1)/*;loadOngo()*/">Next</a>
+                   onclick="canGoNext(1, null)/*;loadOngo()*/">Next</a>
             </div>
         </div>
 
@@ -154,7 +154,7 @@
     <form hidden id="executeBatch2" name="excecuteBatch2" nonvalidate>
         <div id="recipeInfo" class="container">
 
-            <div class="row" id="pgHeader">
+            <div class="row">
                 <div class="col-lg-12 text-center">
                     <h3>Here are your recipes!! Choose one!</h3>
                 </div>
@@ -163,60 +163,35 @@
 
             <div class = "row control-group" id="allResults">
 
-                <%--<div class = "form-group floating-label-form-group controls box-content right left bottom">--%>
-
-                    <%--<img class="col-sm-6 mid" src="https://spoonacular.com/recipeImages/Barbecue-Chicken-Quesadillas-531683.jpg" alt="Barbecue Chicken Quesadillas" width="75%" height="75%">--%>
-
-                    <%--<div class="col-sm-6">--%>
-                        <%--<h4 class="top">Barbecue Chicken Quesadillas</h4>--%>
-                        <%--<h4>you have</h4>--%>
-                        <%--<p>1½ cups cheese</p>--%>
-                        <%--<p>2 cups shredded barbecue chicken</p>--%>
-                        <%--<h4>you need</h4>--%>
-                        <%--<p>12 tortillas</p>--%>
-                        <%--<br>--%>
-                        <%--<p>Click here for instructions and full ingredients</p>--%>
-                    <%--</div>--%>
-
-                <%--</div>--%>
-
             </div>
-
-            <%--<div class="row control-group" id="crpsfileName">--%>
-                <%--<div class="form-group col-xs-8 floating-label-form-group controls">--%>
-                    <%--<label>Enter CRPS File Name</label> <input type="text"--%>
-                                                               <%--class="form-control" placeholder="Enter CRPS File Name"--%>
-                                                               <%--id="crpsfileName"--%>
-                                                               <%--data-validation-required-message="Please enter CRPS File Name">--%>
-                    <%--<p class="help-block text-danger"></p>--%>
-                <%--</div>--%>
-            <%--</div>--%>
+        </div>
 
 
     </form>
+
+    <form hidden id="executeBatch3" name="excecuteBatch3" nonvalidate>
+            <div id="instructionsInfo" class="container">
+
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <h3>Instructions</h3>
+                    </div>
+                </div>
+
+
+                <div class = "row control-group" id="instructionResults">
+
+                </div>
+            </div>
+
+
+        </form>
+
 </section>
 
 
 <!-- Footer -->
-<footer class="text-center">
-    <div class="footer-below">
-        <div class="container">
-            <div class="row">
-                <div class="footer-col col-md-12">
-                    <%--<h>Contact us</h>--%>
-                    <%--<ul class="list-inline">--%>
-							<%--<span> Please mail your query to Ravikumar.Balla@aexp.com--%>
-								<%--and GRMSTestSupport@aexp.com </span>--%>
-                    <%--</ul>--%>
-                    <%--<ul class="list-inline">--%>
-							<%--<span> &copy; 2016 American Express Company.All rights--%>
-								<%--reserved.</span>--%>
-                    <%--</ul>--%>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
+
 
 <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
 <div class="scroll-top page-scroll visible-xs visible-sm">

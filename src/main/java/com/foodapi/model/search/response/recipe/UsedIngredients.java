@@ -1,4 +1,4 @@
-package com.foodapi.model;
+package com.foodapi.model.search.response.recipe;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import java.util.List;
 @lombok.Setter
 @lombok.AllArgsConstructor
 @lombok.NoArgsConstructor
-public class MissedIngredients {
+public class UsedIngredients {
     String id;
     String amount;
     String unit;
