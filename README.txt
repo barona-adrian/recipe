@@ -1,0 +1,1 @@
+clone project and execute "mvn spring-boot:run" to run
