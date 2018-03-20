@@ -95,10 +95,19 @@ function nextPage(pageNumber, id){
 
         var ingredients = [];
 
+        var allIngredients = "";
+
         $("form#executeBatch :input.form-control").each(function(){
             var input = $(this).val(); // This is the jquery object of the input, do what you will
+
+            allIngredients += input.replace(" ", "+") + "%2C";
+
             ingredients.push(input);
         });
+
+        allIngredients = allIngredients.substring(0,allIngredients.length - 3);
+
+        console.log("ingredients: " + allIngredients);
 
         console.log(ingredients);
 
@@ -117,7 +126,15 @@ function nextPage(pageNumber, id){
             // resetToFirst();
         }
 
-        ajaxCall(jsonObject, "/food_api/app/find_by_ingredient", callback);
+        var headers = {};
+        headers["X-Mashape-Key"] = "jbBdXOOCU9mshpJwiHbTJha35RABp13UU5cjsnLKFMTyuYSPAd";
+        headers["X-Mashape-Host"] = "spoonacular-recipe-food-nutrition-v1.p.mashape.com";
+
+//        var url = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?ranking=2&ingredients=" + allIngredients + "&number=5"
+        var url = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=true&ingredients=" + allIngredients + "&limitLicense=false&number=5&ranking=2"
+
+//        ajaxCall(jsonObject, "/food_api/app/find_by_ingredient", callback);
+        getAjaxCall(url, headers, callback);
     }
     if(pageNumber == 2){
 
@@ -134,13 +151,42 @@ function nextPage(pageNumber, id){
                 current = 1;
                 loadInstructions();
             }
-            ajaxCall(jsonObject, "/food_api/app/analyzed_instructions", callback);
+
+
+            var url = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" + id + "/analyzedInstructions?stepBreakdown=true";
+            var headers = {};
+            headers["X-Mashape-Key"] = "jbBdXOOCU9mshpJwiHbTJha35RABp13UU5cjsnLKFMTyuYSPAd";
+            headers["X-Mashape-Host"] = "spoonacular-recipe-food-nutrition-v1.p.mashape.com";
+
+            getAjaxCall(url, headers, callback);
+//            ajaxCall(jsonObject, "/food_api/app/analyzed_instructions", callback);
     }
     if(current + 1 < pages.length){
         current++;
         resetPages();
         $("#" + pages[current]).removeClass("hidden");
     }
+}
+
+function getAjaxCall(url, header, callback){
+    console.log("Doing ajax call to " + url);
+
+    $.ajax({
+        headers: header,
+        type: "GET",
+        url: url,
+//        data: JSON.stringify(json),
+        success: function(response){
+            callback(response);
+            console.log(response);
+        },
+        fail: function(e){
+            console.log("There was an error with the call");
+        },
+        done: function(e){
+            console.log("The call is done");
+        }
+    });
 }
 
 function ajaxCall(json, url, callback){

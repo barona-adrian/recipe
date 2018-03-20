@@ -97,6 +97,8 @@ public class SearchUtils {
         sb.append(num).append("&");
         sb.append(rank);
 
+        System.out.println(sb.toString());
+
         return sb.toString();
     }
 
@@ -108,6 +110,7 @@ public class SearchUtils {
         String id = this.recipeID;
         boolean stepBreakdown = this.stepBreakdown;
         String url = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" + id + "/analyzedInstructions?stepBreakdown=" + stepBreakdown;
+        System.out.println(url);
         return url;
     }
 
