@@ -15,7 +15,7 @@ public class OpenPage {
     @Value("${welcome.message:test}")
     private String message = "Hello World";
 
-    @RequestMapping("/")
+    @RequestMapping("/welcome")
     public String welcome(Map<String, Object> model) {
 
         InetAddress ip;
@@ -33,6 +33,26 @@ public class OpenPage {
 
         model.put("message", this.message);
         return "welcome";
+    }
+
+    @RequestMapping("/index")
+    public String open(Map<String, Object> model) {
+
+//        InetAddress ip;
+//        String hostname;
+//        try {
+//            ip = InetAddress.getLocalHost();
+//            hostname = ip.getHostName();
+//            System.out.println("Your current IP address : " + ip);
+//            System.out.println("Your current Hostname : " + hostname);
+//
+//        } catch (UnknownHostException e) {
+//
+//            e.printStackTrace();
+//        }
+
+        model.put("message", this.message);
+        return "index";
     }
 
 }
