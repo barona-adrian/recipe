@@ -93,25 +93,19 @@ function nextPage(pageNumber, id){
 
         var jsonObject = {};
 
-        var ingredients = [];
-
-        var allIngredients = "";
+        var ingredientList = [];
 
         $("form#executeBatch :input.form-control").each(function(){
             var input = $(this).val(); // This is the jquery object of the input, do what you will
-
-            allIngredients += input.replace(" ", "+") + "%2C";
-
-            ingredients.push(input);
+            var ing = {}
+            ing["name"]=input;
+            ing["mandatory"]=true;
+            ingredientList.push(ing);
         });
 
-        allIngredients = allIngredients.substring(0,allIngredients.length - 3);
+        console.log(ingredientList);
 
-        console.log("ingredients: " + allIngredients);
-
-        console.log(ingredients);
-
-        jsonObject["ingredients"] = ingredients;
+        jsonObject["ingredientList"] = ingredientList;
         jsonObject["number"] = number;
         jsonObject["ranking"] = "2";
 
@@ -126,22 +120,11 @@ function nextPage(pageNumber, id){
             // resetToFirst();
         }
 
-        var headers = {};
-        headers["X-Mashape-Key"] = "jbBdXOOCU9mshpJwiHbTJha35RABp13UU5cjsnLKFMTyuYSPAd";
-        headers["X-Mashape-Host"] = "spoonacular-recipe-food-nutrition-v1.p.mashape.com";
-
-//        var url = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?ranking=2&ingredients=" + allIngredients + "&number=5"
-        var url = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=true&ingredients=" + allIngredients + "&limitLicense=false&number=5&ranking=2"
-
-//        ajaxCall(jsonObject, "/food_api/app/find_by_ingredient", callback);
-        getAjaxCall(url, headers, callback);
+        ajaxCall(jsonObject, "/elasticsearch/ingredients/find_by_ingredient", callback);
     }
     if(pageNumber == 2){
 
             $("#executeBatch2").addClass("hidden");
-
-            var jsonObject = {};
-            jsonObject["recipeID"] = id;
 
             console.log(jsonObject);
 
@@ -151,15 +134,7 @@ function nextPage(pageNumber, id){
                 current = 1;
                 loadInstructions();
             }
-
-
-            var url = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" + id + "/analyzedInstructions?stepBreakdown=true";
-            var headers = {};
-            headers["X-Mashape-Key"] = "jbBdXOOCU9mshpJwiHbTJha35RABp13UU5cjsnLKFMTyuYSPAd";
-            headers["X-Mashape-Host"] = "spoonacular-recipe-food-nutrition-v1.p.mashape.com";
-
-            getAjaxCall(url, headers, callback);
-//            ajaxCall(jsonObject, "/food_api/app/analyzed_instructions", callback);
+            getCall("/elasticsearch/ingredients/get_recipe?id=" + id, callback);
     }
     if(current + 1 < pages.length){
         current++;
@@ -168,14 +143,16 @@ function nextPage(pageNumber, id){
     }
 }
 
-function getAjaxCall(url, header, callback){
+function ajaxCall(json, url, callback){
     console.log("Doing ajax call to " + url);
 
     $.ajax({
-        headers: header,
-        type: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        type: "POST",
         url: url,
-//        data: JSON.stringify(json),
+        data: JSON.stringify(json),
         success: function(response){
             callback(response);
             console.log(response);
@@ -189,16 +166,12 @@ function getAjaxCall(url, header, callback){
     });
 }
 
-function ajaxCall(json, url, callback){
+function getCall(url, callback){
     console.log("Doing ajax call to " + url);
 
     $.ajax({
-        headers: {
-            "Content-Type": "application/json"
-        },
-        type: "POST",
+        type: "GET",
         url: url,
-        data: JSON.stringify(json),
         success: function(response){
             callback(response);
             console.log(response);
@@ -349,14 +322,17 @@ function loadOngo() {
 function loadInstructions(){
     $("#executeBatch3").removeAttr("hidden");
 
+    console.log("whoa! " + instructionsResponse.steps);
 
-    for (var key in instructionsResponse)
-    {
-        if (instructionsResponse.hasOwnProperty(key))
-        {
+
+
+//    for (var key in instructionsResponse)
+//    {
+//        if (instructionsResponse.hasOwnProperty(key))
+//        {
             // here you have access to
-            var name = instructionsResponse[key].name;
-            var steps = instructionsResponse[key].steps;
+            var name = instructionsResponse.name;
+            var steps = instructionsResponse.steps;
 
 
 //            console.log("name : " + name);
@@ -411,8 +387,8 @@ function loadInstructions(){
             }
 
             console.log("\n");
-        }
-    }
+//        }
+//    }
 }
 
 
@@ -426,22 +402,3 @@ function getInstructions(id){
     canGoNext(2, id);
     $("#instructionsInfo").removeClass("hidden");
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
