@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 @lombok.Getter
 public class ElasticClient {
 
-    private final JestClient client;
+    private JestClient client;
 
     public ElasticClient(@Value("${elasticsearch.server.url}") String elasticServerURL){
 
@@ -24,7 +24,9 @@ public class ElasticClient {
                 .build()
         );
 
-        this.client = factory.getObject();
+//        JestClient j = factory.getObject();
+
+//        client = j;
 
     }
 

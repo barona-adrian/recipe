@@ -21,7 +21,13 @@ public class FindRecipeByID {
 
     private AnalyzedInstructionsResponse analyzedInstruction() throws Exception {
         HttpResponse<JsonNode> response = getAnalyzedInstruction();
-        AnalyzedInstructionsResponse instructions = new GsonBuilder().create().fromJson(response.getBody().getObject().toString(), AnalyzedInstructionsResponse.class);
+
+        System.out.println("get body:\n" + response.getBody().toString());
+        System.out.println("get array:\n" + response.getBody().getArray().toString());
+        System.out.println("get array 0:\n" + response.getBody().getArray().get(0).toString());
+//        System.out.println("get object:\n" + response.getBody().getObject().toString());
+
+        AnalyzedInstructionsResponse instructions = new GsonBuilder().create().fromJson(response.getBody().getArray().get(0).toString(), AnalyzedInstructionsResponse.class);
         return instructions;
     }
 

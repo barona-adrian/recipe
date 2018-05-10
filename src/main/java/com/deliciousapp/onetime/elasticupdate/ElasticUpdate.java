@@ -16,15 +16,19 @@ public class ElasticUpdate {
 
     private JestClient client;
 
+    public ElasticUpdate(){
+        jestSetup();
+    }
+
     public void jestSetup(){
-        JestClientFactory factory = new JestClientFactory();
-        factory.setHttpClientConfig(
-                new HttpClientConfig.Builder("https://search-deliciousapp-z3bbczxj7yuvplnvdxmfz6fbtq.us-east-2.es.amazonaws.com")
-                        .defaultCredentials("admin", "password")
-                        .multiThreaded(true).maxConnectionIdleTime(2, TimeUnit.DAYS).connTimeout(1000000).readTimeout(1000000)
-                        .build()
-        );
-        client = factory.getObject();
+//        JestClientFactory factory = new JestClientFactory();
+//        factory.setHttpClientConfig(
+//                new HttpClientConfig.Builder("https://search-deliciousapp-z3bbczxj7yuvplnvdxmfz6fbtq.us-east-2.es.amazonaws.com")
+//                        .defaultCredentials("admin", "password")
+//                        .multiThreaded(true).maxConnectionIdleTime(2, TimeUnit.DAYS).connTimeout(1000000).readTimeout(1000000)
+//                        .build()
+//        );
+//        client = factory.getObject();
     }
 
     public void updateElasticIngredients(FindByElasticIngredientsResponse elasticInput) throws IOException {
@@ -37,7 +41,7 @@ public class ElasticUpdate {
         String id = elasticInput.getId();
         JestResult result = client.execute(
                 new Index.Builder(source)
-                        .index("test")
+                        .index("ingredients")
                         .type("default")
                         .id(id)
                         .build()
@@ -53,7 +57,7 @@ public class ElasticUpdate {
         String source = new GsonBuilder().setPrettyPrinting().create().toJson(elasticInput);
         JestResult result = client.execute(
                 new Index.Builder(source)
-                        .index("test")
+                        .index("recipes")
                         .type("default")
                         .id(id)
                         .build()

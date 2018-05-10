@@ -8,10 +8,9 @@ public class FindByIngredientsRequest {
 
 
     private List<String> ingredients;
-
     private List<Ingredient> ingredientList;
-
     private int itemsPerPage;
+    private String ipAddress;
 
 
 

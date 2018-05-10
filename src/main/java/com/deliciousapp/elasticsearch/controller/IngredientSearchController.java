@@ -1,6 +1,7 @@
 package com.deliciousapp.elasticsearch.controller;
 
 import com.deliciousapp.elasticsearch.model.findbyingredient.output.FindByElasticIngredientsResponse;
+import com.deliciousapp.hbase.services.SearchService;
 import com.deliciousapp.onetime.findByID.model.output.AnalyzedInstructionsResponse;
 //import com.food.elasticsearch.OneTimeLoad;
 import com.deliciousapp.elasticsearch.model.findbyingredient.input.FindByIngredientsRequest;
@@ -31,6 +32,9 @@ public class IngredientSearchController {
     @Autowired
     RecipeService recipeService;
 
+    @Autowired
+    SearchService searchService;
+
     @POST
     @Path("/find_by_ingredient")
     @Produces({"application/json"})
@@ -48,6 +52,7 @@ public class IngredientSearchController {
         log.info("Incoming Request:\n" + new GsonBuilder().setPrettyPrinting().create().toJson(request));
 
         List<FindByElasticIngredientsResponse> response = recipeService.findByIngredients(request);
+        searchService.storeSearch(request);
         log.info("\nOutgoing Response:\n");
         log.info(new GsonBuilder().setPrettyPrinting().create().toJson(response));
 
